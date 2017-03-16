@@ -23,6 +23,7 @@ namespace ouzel
         {
             for (Component* component : components)
             {
+                if (entered) component->leave();
                 component->node = nullptr;
             }
 
@@ -336,6 +337,7 @@ namespace ouzel
         {
             if (component->node)
             {
+                if (entered) component->enter();
                 component->node->removeComponent(component);
             }
 
@@ -349,6 +351,7 @@ namespace ouzel
             {
                 if (*i == component)
                 {
+                    if (entered) component->leave();
                     component->node = nullptr;
                     components.erase(i);
                     return true;
@@ -375,6 +378,87 @@ namespace ouzel
             }
 
             return boundingBox;
+        }
+
+        void Node::enter()
+        {
+            NodeContainer::enter();
+
+            for (Component* component : components)
+            {
+                component->enter();
+            }
+        }
+
+        void Node::leave()
+        {
+            NodeContainer::leave();
+
+            for (Component* component : components)
+            {
+                component->leave();
+            }
+        }
+
+        void Node::findComponents(const Vector2& position, std::vector<Component*>& components) const
+        {
+            NodeContainer::findComponents(position, components);
+
+            if (pickable)
+            {
+                Vector2 localPosition = convertWorldToLocal(position);
+
+                for (auto i = components.rbegin(); i != components.rend(); ++i)
+                {
+                    Component* component = *i;
+
+                    if (component->pointOn(localPosition))
+                    {
+                        auto upperBound = std::upper_bound(components.begin(), components.end(), component,
+                                                           [](Component* a, Component* b) {
+                                                               return a->node->worldOrder < a->node->worldOrder;
+                                                           });
+
+                        components.insert(upperBound, component);
+                    }
+                }
+            }
+        }
+
+        void Node::findComponents(const std::vector<Vector2>& edges, std::vector<Component*>& components) const
+        {
+            NodeContainer::findComponents(edges, components);
+
+            if (pickable)
+            {
+                Matrix4 inverse = getInverseTransform();
+
+                std::vector<Vector2> transformedEdges;
+
+                for (const Vector2& edge : edges)
+                {
+                    Vector3 transformedEdge = edge;
+
+                    inverse.transformPoint(transformedEdge);
+
+                    transformedEdges.push_back(Vector2(transformedEdge.v[0], transformedEdge.v[1]));
+                }
+
+                for (auto i = components.rbegin(); i != components.rend(); ++i)
+                {
+                    Component* component = *i;
+
+                    if (component->shapeOverlaps(transformedEdges))
+                    {
+                        auto upperBound = std::upper_bound(components.begin(), components.end(), component,
+                                                           [](Component* a, Component* b) {
+                                                               return a->node->worldOrder < a->node->worldOrder;
+                                                           });
+
+                        components.insert(upperBound, component);
+                    }
+                }
+            }
         }
     } // namespace scene
 } // namespace ouzel

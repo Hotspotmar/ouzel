@@ -9,6 +9,8 @@ using namespace ouzel;
 
 SpritesSample::SpritesSample(Samples& aSamples):
     samples(aSamples),
+    hideButton("button.png", "button_selected.png", "button_down.png", "", "Show/hide", "arial.fnt", Color::BLACK, Color::BLACK, Color::BLACK),
+    wireframeButton("button.png", "button_selected.png", "button_down.png", "", "Wireframe", "arial.fnt", Color::BLACK, Color::BLACK, Color::BLACK),
     backButton("button.png", "button_selected.png", "button_down.png", "", "Back", "arial.fnt", Color::BLACK, Color::BLACK, Color::BLACK)
 {
     eventHandler.gamepadHandler = bind(&SpritesSample::handleGamepad, this, placeholders::_1, placeholders::_2);
@@ -53,18 +55,23 @@ SpritesSample::SpritesSample(Samples& aSamples):
     guiLayer.addCamera(&guiCamera);
     addLayer(&guiLayer);
 
-    menu.setParent(&guiLayer);
+    menu.setNode(&menuNode);
+    menuNode.setParent(&guiLayer);
 
-    hideButton.reset(new gui::Button("button.png", "button_selected.png", "button_down.png", "", "Show/hide", "arial.fnt", Color::BLACK, Color::BLACK, Color::BLACK));
-    hideButton->setPosition(Vector2(-200.0f, 200.0f));
-    menu.addWidget(hideButton.get());
+    hideButton.setNode(&backButtonNode);
+    hideButton.setMenu(&menu);
+    hideButtonNode.setParent(&menuNode);
+    hideButtonNode.setPosition(Vector2(-200.0f, 200.0f));
 
-    wireframeButton.reset(new gui::Button("button.png", "button_selected.png", "button_down.png", "", "Wireframe", "arial.fnt", Color::BLACK, Color::BLACK, Color::BLACK));
-    wireframeButton->setPosition(Vector2(-200.0f, 160.0f));
-    menu.addWidget(wireframeButton.get());
+    wireframeButton.setNode(&backButtonNode);
+    wireframeButton.setMenu(&menu);
+    wireframeButtonNode.setParent(&menuNode);
+    wireframeButtonNode.setPosition(Vector2(-200.0f, 160.0f));
 
-    backButton.setPosition(Vector2(-200.0f, -200.0f));
-    menu.addWidget(&backButton);
+    backButton.setNode(&backButtonNode);
+    backButton.setMenu(&menu);
+    backButtonNode.setParent(&menuNode);
+    backButtonNode.setPosition(Vector2(-200.0f, -200.0f));
 }
 
 bool SpritesSample::handleGamepad(Event::Type type, const GamepadEvent& event)
@@ -85,15 +92,15 @@ bool SpritesSample::handleUI(Event::Type type, const UIEvent& event)
 {
     if (type == Event::Type::UI_CLICK_NODE)
     {
-        if (event.node == &backButton)
+        if (event.component == &backButton)
         {
             samples.setScene(std::unique_ptr<scene::Scene>(new MainMenu(samples)));
         }
-        else if (event.node == hideButton.get())
+        else if (event.component == &hideButton)
         {
             character.setHidden(!character.isHidden());
         }
-        else if (event.node == wireframeButton.get())
+        else if (event.component == &wireframeButton)
         {
             camera.setWireframe(!camera.getWireframe());
         }

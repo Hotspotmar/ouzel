@@ -153,6 +153,68 @@ namespace ouzel
             return result;
         }
 
+        Component* Layer::pickComponent(const Vector2& position) const
+        {
+            for (auto i = cameras.rbegin(); i != cameras.rend(); ++i)
+            {
+                Camera* camera = *i;
+
+                std::vector<Component*> components;
+
+                Vector2 worldPosition = camera->convertNormalizedToWorld(position);
+
+                findComponents(worldPosition, components);
+
+                if (!components.empty()) return components.front();
+            }
+
+            return nullptr;
+        }
+
+        std::vector<Component*> Layer::pickComponents(const Vector2& position) const
+        {
+            std::vector<Component*> result;
+
+            for (auto i = cameras.rbegin(); i != cameras.rend(); ++i)
+            {
+                Camera* camera = *i;
+
+                Vector2 worldPosition = camera->convertNormalizedToWorld(position);
+
+                std::vector<Component*> components;
+                findComponents(worldPosition, components);
+
+                result.insert(result.end(), components.begin(), components.end());
+            }
+
+            return result;
+        }
+
+        std::vector<Component*> Layer::pickComponents(const std::vector<Vector2>& edges) const
+        {
+            std::vector<Component*> result;
+
+            for (auto i = cameras.rbegin(); i != cameras.rend(); ++i)
+            {
+                Camera* camera = *i;
+
+                std::vector<Vector2> worldEdges;
+                worldEdges.reserve(edges.size());
+
+                for (const Vector2& edge : edges)
+                {
+                    worldEdges.push_back(camera->convertNormalizedToWorld(edge));
+                }
+
+                std::vector<Component*> components;
+                findComponents(worldEdges, components);
+                
+                result.insert(result.end(), components.begin(), components.end());
+            }
+            
+            return result;
+        }
+
         void Layer::setOrder(int32_t newOrder)
         {
             order = newOrder;

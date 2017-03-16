@@ -128,5 +128,31 @@ namespace ouzel
                 }
             }
         }
+
+        void NodeContainer::findComponents(const Vector2& position, std::vector<Component*>& components) const
+        {
+            for (auto i = children.rbegin(); i != children.rend(); ++i)
+            {
+                Node* node = *i;
+
+                if (!node->isHidden())
+                {
+                    node->findComponents(position, components);
+                }
+            }
+        }
+
+        void NodeContainer::findComponents(const std::vector<Vector2>& edges, std::vector<Component*>& components) const
+        {
+            for (auto i = children.rbegin(); i != children.rend(); ++i)
+            {
+                Node* node = *i;
+
+                if (!node->isHidden())
+                {
+                    node->findComponents(edges, components);
+                }
+            }
+        }
     } // namespace scene
 } // namespace ouzel

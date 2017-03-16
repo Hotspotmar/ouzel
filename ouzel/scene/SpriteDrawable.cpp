@@ -1,14 +1,11 @@
 // Copyright (C) 2017 Elviss Strazdins
 // This file is part of the Ouzel engine.
 
-#include "RadioButton.h"
+#include "SpriteDrawable.h"
 
 namespace ouzel
 {
-    namespace gui
+    namespace scene
     {
-        RadioButton::RadioButton()
-        {
-        }
-    } // namespace gui
+    } // namespace scene
 } // namespace ouzel

@@ -33,6 +33,10 @@ namespace ouzel
             std::vector<Node*> pickNodes(const Vector2& position) const;
             std::vector<Node*> pickNodes(const std::vector<Vector2>& edges) const;
 
+            Component* pickComponent(const Vector2& position) const;
+            std::vector<Component*> pickComponents(const Vector2& position) const;
+            std::vector<Component*> pickComponents(const std::vector<Vector2>& edges) const;
+
             int32_t getOrder() const { return order; }
             void setOrder(int32_t newOrder);
 

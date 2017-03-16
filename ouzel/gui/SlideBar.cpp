@@ -9,7 +9,6 @@ namespace ouzel
     {
         SlideBar::SlideBar()
         {
-            pickable = true;
         }
     } // namespace gui
 } // namespace ouzel

@@ -22,14 +22,20 @@ private:
     std::shared_ptr<ouzel::audio::Sound> jumpSound;
     std::shared_ptr<ouzel::audio::Sound> ambientSound;
 
+    ouzel::scene::Node test8BitButtonNode;
     ouzel::gui::Button test8BitButton;
+    ouzel::scene::Node test24BitButtonNode;
     ouzel::gui::Button test24BitButton;
+    ouzel::scene::Node jumpButtonNode;
     ouzel::gui::Button jumpButton;
+    ouzel::scene::Node ambientButtonNode;
     ouzel::gui::Button ambientButton;
     ouzel::EventHandler eventHandler;
 
     ouzel::scene::Layer guiLayer;
     ouzel::scene::Camera guiCamera;
+    ouzel::scene::Node menuNode;
     ouzel::gui::Menu menu;
+    ouzel::scene::Node backButtonNode;
     ouzel::gui::Button backButton;
 };

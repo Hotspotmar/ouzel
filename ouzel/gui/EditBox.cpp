@@ -9,7 +9,6 @@ namespace ouzel
     {
         EditBox::EditBox()
         {
-            pickable = true;
         }
 
         void EditBox::setValue(const std::string& newValue)

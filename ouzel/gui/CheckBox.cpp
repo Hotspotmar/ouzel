@@ -63,8 +63,6 @@ namespace ouzel
                 }
             }
 
-            pickable = true;
-
             updateSprite();
         }
 
@@ -90,7 +88,7 @@ namespace ouzel
         {
             if (!enabled) return true;
 
-            if (event.node == this)
+            if (event.component == this)
             {
                 if (type == Event::Type::UI_ENTER_NODE)
                 {
@@ -123,7 +121,7 @@ namespace ouzel
 
                     Event changeEvent;
                     changeEvent.type = Event::Type::UI_WIDGET_CHANGE;
-                    changeEvent.uiEvent.node = this;
+                    changeEvent.uiEvent.component = this;
                     sharedEngine->getEventDispatcher()->postEvent(changeEvent);
                 }
             }

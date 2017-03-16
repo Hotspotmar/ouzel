@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "scene/Node.h"
+#include "scene/Component.h"
 
 namespace ouzel
 {
@@ -11,11 +11,14 @@ namespace ouzel
     {
         class Menu;
 
-        class Widget: public scene::Node
+        class Widget: public scene::Component
         {
             friend Menu;
         public:
             Widget();
+            virtual ~Widget();
+
+            void setMenu(Menu* newMenu);
 
             virtual void setEnabled(bool newEnabled);
             bool isEnabled() const { return enabled; }
@@ -24,6 +27,8 @@ namespace ouzel
 
         protected:
             virtual void setSelected(bool newSelected);
+
+            Menu* menu = nullptr;
 
             bool enabled = true;
             bool selected = false;

@@ -9,7 +9,6 @@ namespace ouzel
     {
         ComboBox::ComboBox()
         {
-            pickable = true;
         }
     } // namespace gui
 } // namespace ouzel

@@ -127,6 +127,8 @@ namespace ouzel
 
         protected:
             virtual void addChild(Node* node) override;
+            virtual void enter() override;
+            virtual void leave() override;
 
             void addComponent(Component* component);
             bool removeComponent(Component* component);
@@ -135,6 +137,9 @@ namespace ouzel
             virtual void calculateTransform() const;
 
             virtual void calculateInverseTransform() const;
+
+            virtual void findComponents(const Vector2& position, std::vector<Component*>& components) const override;
+            virtual void findComponents(const std::vector<Vector2>& edges, std::vector<Component*>& components) const override;
 
             Matrix4 parentTransform;
             mutable Matrix4 transform;

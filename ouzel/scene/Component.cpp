@@ -106,5 +106,13 @@ namespace ouzel
 
             return true;
         }
+
+        void Component::enter()
+        {
+        }
+
+        void Component::leave()
+        {
+        }
     } // namespace scene
 } // namespace ouzel

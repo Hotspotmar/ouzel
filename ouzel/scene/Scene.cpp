@@ -146,6 +146,49 @@ namespace ouzel
             return result;
         }
 
+        Component* Scene::pickComponent(const Vector2& position) const
+        {
+            for (std::vector<Layer*>::const_reverse_iterator i = layers.rbegin(); i != layers.rend(); ++i)
+            {
+                Layer* layer = *i;
+
+                if (Component* result = layer->pickComponent(position))
+                {
+                    return result;
+                }
+            }
+
+            return nullptr;
+        }
+
+        std::vector<Component*> Scene::pickComponents(const Vector2& position) const
+        {
+            std::vector<Component*> result;
+
+            for (auto i = layers.rbegin(); i != layers.rend(); ++i)
+            {
+                std::vector<Component*> nodes = (*i)->pickComponents(position);
+
+                result.insert(result.end(), nodes.begin(), nodes.end());
+            }
+            
+            return result;
+        }
+
+        std::vector<Component*> Scene::pickComponents(const std::vector<Vector2>& edges) const
+        {
+            std::vector<Component*> result;
+
+            for (auto i = layers.rbegin(); i != layers.rend(); ++i)
+            {
+                std::vector<Component*> nodes = (*i)->pickComponents(edges);
+
+                result.insert(result.end(), nodes.begin(), nodes.end());
+            }
+            
+            return result;
+        }
+
         void Scene::enter()
         {
             entered = true;
@@ -188,29 +231,29 @@ namespace ouzel
             {
                 case Event::Type::MOUSE_DOWN:
                 {
-                    Node* node = pickNode(event.position);
-                    pointerDownOnNode(0, node, event.position);
+                    Component* component = pickComponent(event.position);
+                    pointerDownOnComponent(0, component, event.position);
                     break;
                 }
                 case Event::Type::MOUSE_UP:
                 {
-                    Node* node = pickNode(event.position);
-                    pointerUpOnNode(0, node, event.position);
+                    Component* component = pickComponent(event.position);
+                    pointerUpOnComponent(0, component, event.position);
                     break;
                 }
                 case Event::Type::MOUSE_MOVE:
                 {
-                    Node* previousNode = pickNode(event.position - event.difference);
-                    pointerLeaveNode(0, previousNode, event.position);
+                    Component* previousComponent = pickComponent(event.position - event.difference);
+                    pointerLeaveComponent(0, previousComponent, event.position);
 
-                    Node* node = pickNode(event.position);
-                    pointerEnterNode(0, node, event.position);
+                    Component* component = pickComponent(event.position);
+                    pointerEnterComponent(0, component, event.position);
 
-                    auto i = pointerDownOnNodes.find(0);
+                    auto i = pointerDownOnComponents.find(0);
 
-                    if (i != pointerDownOnNodes.end())
+                    if (i != pointerDownOnComponents.end())
                     {
-                        pointerDragNode(0, i->second, event.position);
+                        pointerDragComponent(0, i->second, event.position);
                     }
                     break;
                 }
@@ -227,36 +270,36 @@ namespace ouzel
             {
                 case Event::Type::TOUCH_BEGIN:
                 {
-                    Node* node = pickNode(event.position);
-                    pointerDownOnNode(event.touchId, node, event.position);
+                    Component* component = pickComponent(event.position);
+                    pointerDownOnComponent(event.touchId, component, event.position);
                     break;
                 }
                 case Event::Type::TOUCH_END:
                 {
-                    Node* node = pickNode(event.position);
-                    pointerUpOnNode(event.touchId, node, event.position);
+                    Component* component = pickComponent(event.position);
+                    pointerUpOnComponent(event.touchId, component, event.position);
                     break;
                 }
                 case Event::Type::TOUCH_MOVE:
                 {
-                    Node* previousNode = pickNode(event.position - event.difference);
-                    pointerLeaveNode(0, previousNode, event.position);
+                    Component* previousComponent = pickComponent(event.position - event.difference);
+                    pointerLeaveComponent(0, previousComponent, event.position);
 
-                    Node* node = pickNode(event.position);
-                    pointerEnterNode(0, node, event.position);
+                    Component* component = pickComponent(event.position);
+                    pointerEnterComponent(0, component, event.position);
 
-                    auto i = pointerDownOnNodes.find(event.touchId);
+                    auto i = pointerDownOnComponents.find(event.touchId);
 
-                    if (i != pointerDownOnNodes.end())
+                    if (i != pointerDownOnComponents.end())
                     {
-                        pointerDragNode(event.touchId, i->second, event.position);
+                        pointerDragComponent(event.touchId, i->second, event.position);
                     }
                     break;
                 }
                 case Event::Type::TOUCH_CANCEL:
                 {
-                    Node* node = pickNode(event.position);
-                    pointerUpOnNode(event.touchId, node, event.position);
+                    Component* component = pickComponent(event.position);
+                    pointerUpOnComponent(event.touchId, component, event.position);
                     break;
                 }
                 default:
@@ -266,14 +309,14 @@ namespace ouzel
             return true;
         }
 
-        void Scene::pointerEnterNode(uint64_t pointerId, Node* node, const Vector2& position)
+        void Scene::pointerEnterComponent(uint64_t pointerId, Component* component, const Vector2& position)
         {
-            if (node)
+            if (component)
             {
                 Event event;
                 event.type = Event::Type::UI_ENTER_NODE;
 
-                event.uiEvent.node = node;
+                event.uiEvent.component = component;
                 event.uiEvent.touchId = pointerId;
                 event.uiEvent.position = position;
 
@@ -281,14 +324,14 @@ namespace ouzel
             }
         }
 
-        void Scene::pointerLeaveNode(uint64_t pointerId, Node* node, const Vector2& position)
+        void Scene::pointerLeaveComponent(uint64_t pointerId, Component* component, const Vector2& position)
         {
-            if (node)
+            if (component)
             {
                 Event event;
                 event.type = Event::Type::UI_LEAVE_NODE;
 
-                event.uiEvent.node = node;
+                event.uiEvent.component = component;
                 event.uiEvent.touchId = pointerId;
                 event.uiEvent.position = position;
 
@@ -296,16 +339,16 @@ namespace ouzel
             }
         }
 
-        void Scene::pointerDownOnNode(uint64_t pointerId, Node* node, const Vector2& position)
+        void Scene::pointerDownOnComponent(uint64_t pointerId, Component* component, const Vector2& position)
         {
-            pointerDownOnNodes[pointerId] = node;
+            pointerDownOnComponents[pointerId] = component;
 
-            if (node)
+            if (component)
             {
                 Event event;
                 event.type = Event::Type::UI_PRESS_NODE;
 
-                event.uiEvent.node = node;
+                event.uiEvent.component = component;
                 event.uiEvent.touchId = pointerId;
                 event.uiEvent.position = position;
 
@@ -313,31 +356,31 @@ namespace ouzel
             }
         }
 
-        void Scene::pointerUpOnNode(uint64_t pointerId, Node* node, const Vector2& position)
+        void Scene::pointerUpOnComponent(uint64_t pointerId, Component* component, const Vector2& position)
         {
-            auto i = pointerDownOnNodes.find(pointerId);
+            auto i = pointerDownOnComponents.find(pointerId);
 
-            if (i != pointerDownOnNodes.end())
+            if (i != pointerDownOnComponents.end())
             {
-                auto pointerDownOnNode = i->second;
+                auto pointerDownOnComponent = i->second;
 
-                if (pointerDownOnNode)
+                if (pointerDownOnComponent)
                 {
                     Event releaseEvent;
                     releaseEvent.type = Event::Type::UI_RELEASE_NODE;
 
-                    releaseEvent.uiEvent.node = pointerDownOnNode;
+                    releaseEvent.uiEvent.component = pointerDownOnComponent;
                     releaseEvent.uiEvent.touchId = pointerId;
                     releaseEvent.uiEvent.position = position;
 
                     sharedEngine->getEventDispatcher()->postEvent(releaseEvent);
 
-                    if (pointerDownOnNode == node)
+                    if (pointerDownOnComponent == component)
                     {
                         Event clickEvent;
                         clickEvent.type = Event::Type::UI_CLICK_NODE;
 
-                        clickEvent.uiEvent.node = pointerDownOnNode;
+                        clickEvent.uiEvent.component = pointerDownOnComponent;
                         clickEvent.uiEvent.touchId = pointerId;
                         clickEvent.uiEvent.position = position;
 
@@ -346,17 +389,17 @@ namespace ouzel
                 }
             }
 
-            pointerDownOnNodes.erase(pointerId);
+            pointerDownOnComponents.erase(pointerId);
         }
 
-        void Scene::pointerDragNode(uint64_t, Node* node, const Vector2& position)
+        void Scene::pointerDragComponent(uint64_t, Component* component, const Vector2& position)
         {
-            if (node)
+            if (component)
             {
                 Event event;
                 event.type = Event::Type::UI_DRAG_NODE;
 
-                event.uiEvent.node = node;
+                event.uiEvent.component = component;
                 event.uiEvent.position = position;
 
                 sharedEngine->getEventDispatcher()->postEvent(event);

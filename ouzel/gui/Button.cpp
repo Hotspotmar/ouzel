@@ -21,8 +21,6 @@ namespace ouzel
         {
             eventHandler.uiHandler = std::bind(&Button::handleUI, this, std::placeholders::_1, std::placeholders::_2);
             sharedEngine->getEventDispatcher()->addEventHandler(&eventHandler);
-
-            pickable = true;
         }
 
         Button::Button(const std::string& normalImage,
@@ -90,8 +88,6 @@ namespace ouzel
                 }
             }
 
-            pickable = true;
-
             updateSprite();
         }
 
@@ -117,7 +113,7 @@ namespace ouzel
         {
             if (!enabled) return true;
 
-            if (event.node == this)
+            if (event.component == this)
             {
                 if (type == Event::Type::UI_ENTER_NODE)
                 {

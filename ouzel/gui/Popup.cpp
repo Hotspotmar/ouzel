@@ -9,7 +9,6 @@ namespace ouzel
     {
         Popup::Popup()
         {
-            pickable = true;
         }
     } // namespace gui
 } // namespace ouzel

@@ -49,22 +49,33 @@ SoundSample::SoundSample(Samples& aSamples):
     guiLayer.addCamera(&guiCamera);
     addLayer(&guiLayer);
 
-    menu.setParent(&guiLayer);
+    menuNode.setParent(&guiLayer);
+    menu.setNode(&menuNode);
 
-    test8BitButton.setPosition(Vector2(0.0f, 80.0f));
-    menu.addWidget(&test8BitButton);
+    test8BitButton.setMenu(&menu);
+    test8BitButton.setNode(&test8BitButtonNode);
+    test8BitButtonNode.setPosition(Vector2(0.0f, 80.0f));
+    test8BitButtonNode.setParent(&menuNode);
 
-    test24BitButton.setPosition(Vector2(0.0f, 40.0f));
-    menu.addWidget(&test24BitButton);
+    test24BitButton.setMenu(&menu);
+    test24BitButton.setNode(&test24BitButtonNode);
+    test24BitButtonNode.setPosition(Vector2(0.0f, 40.0f));
+    test24BitButtonNode.setParent(&menuNode);
 
-    jumpButton.setPosition(Vector2(0.0f, 0.0f));
-    menu.addWidget(&jumpButton);
+    jumpButton.setMenu(&menu);
+    jumpButton.setNode(&jumpButtonNode);
+    jumpButtonNode.setPosition(Vector2(0.0f, 0.0f));
+    jumpButtonNode.setParent(&menuNode);
 
-    ambientButton.setPosition(Vector2(0.0f, -40.0f));
-    menu.addWidget(&ambientButton);
+    ambientButton.setMenu(&menu);
+    ambientButton.setNode(&ambientButtonNode);
+    ambientButtonNode.setPosition(Vector2(0.0f, -40.0f));
+    ambientButtonNode.setParent(&menuNode);
 
-    backButton.setPosition(Vector2(-200.0f, -200.0f));
-    menu.addWidget(&backButton);
+    backButton.setMenu(&menu);
+    backButton.setNode(&backButtonNode);
+    backButtonNode.setPosition(Vector2(-200.0f, -200.0f));
+    backButtonNode.setParent(&menuNode);
 }
 
 bool SoundSample::handleGamepad(Event::Type type, const GamepadEvent& event)
@@ -85,23 +96,23 @@ bool SoundSample::handleUI(Event::Type type, const UIEvent& event) const
 {
     if (type == Event::Type::UI_CLICK_NODE)
     {
-        if (event.node == &backButton)
+        if (event.component == &backButton)
         {
             samples.setScene(std::unique_ptr<scene::Scene>(new MainMenu(samples)));
         }
-        else if (event.node == &test8BitButton)
+        else if (event.component == &test8BitButton)
         {
             test8BitSound->play();
         }
-        else if (event.node == &test24BitButton)
+        else if (event.component == &test24BitButton)
         {
             test24BitSound->play();
         }
-        else if (event.node == &jumpButton)
+        else if (event.component == &jumpButton)
         {
             jumpSound->play();
         }
-        else if (event.node == &ambientButton)
+        else if (event.component == &ambientButton)
         {
             ambientSound->play();
         }

@@ -19,6 +19,14 @@ namespace ouzel
             eventHandler.uiHandler = std::bind(&Menu::handleUI, this, std::placeholders::_1, std::placeholders::_2);
         }
 
+        Menu::~Menu()
+        {
+            for (Widget* widget : widgets)
+            {
+                widget->menu = nullptr;
+            }
+        }
+
         void Menu::enter()
         {
             sharedEngine->getEventDispatcher()->addEventHandler(&eventHandler);
@@ -53,8 +61,6 @@ namespace ouzel
 
         void Menu::addWidget(Widget* widget)
         {
-            addChild(widget);
-
             if (widget)
             {
                 widgets.push_back(widget);
@@ -66,21 +72,16 @@ namespace ouzel
             }
         }
 
-        bool Menu::removeChild(scene::Node* node)
+        bool Menu::removeWidget(Widget* widget)
         {
-            if (!Node::removeChild(node))
-            {
-                return false;
-            }
-
-            auto i = std::find(widgets.begin(), widgets.end(), node);
+            auto i = std::find(widgets.begin(), widgets.end(), widget);
 
             if (i != widgets.end())
             {
                 widgets.erase(i);
             }
 
-            if (selectedWidget == node)
+            if (selectedWidget == widget)
             {
                 selectWidget(nullptr);
             }
@@ -186,8 +187,7 @@ namespace ouzel
                             Event clickEvent;
                             clickEvent.type = Event::Type::UI_CLICK_NODE;
 
-                            clickEvent.uiEvent.node = selectedWidget;
-                            clickEvent.uiEvent.position = selectedWidget->getPosition();
+                            clickEvent.uiEvent.component = selectedWidget;
 
                             sharedEngine->getEventDispatcher()->postEvent(clickEvent);
                         }
@@ -216,8 +216,7 @@ namespace ouzel
                             Event clickEvent;
                             clickEvent.type = Event::Type::UI_CLICK_NODE;
 
-                            clickEvent.uiEvent.node = selectedWidget;
-                            clickEvent.uiEvent.position = selectedWidget->getPosition();
+                            clickEvent.uiEvent.component = selectedWidget;
 
                             sharedEngine->getEventDispatcher()->postEvent(clickEvent);
                         }
@@ -254,9 +253,9 @@ namespace ouzel
 
             if (type == Event::Type::UI_ENTER_NODE)
             {
-                if (std::find(widgets.begin(), widgets.end(), event.node) != widgets.end())
+                if (std::find(widgets.begin(), widgets.end(), event.component) != widgets.end())
                 {
-                    selectWidget(static_cast<Widget*>(event.node));
+                    selectWidget(static_cast<Widget*>(event.component));
                 }
             }
 

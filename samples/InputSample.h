@@ -24,12 +24,15 @@ private:
     
     ouzel::EventHandler eventHandler;
 
-    std::unique_ptr<ouzel::gui::Button> button;
+    ouzel::scene::Node showHideButtonNode;
+    ouzel::gui::Button showHideButton;
     ouzel::scene::ParticleSystem flameParticleSystem;
     ouzel::scene::Node flame;
 
     ouzel::scene::Layer guiLayer;
     ouzel::scene::Camera guiCamera;
+    ouzel::scene::Node menuNode;
     ouzel::gui::Menu menu;
+    ouzel::scene::Node backButtonNode;
     ouzel::gui::Button backButton;
 };

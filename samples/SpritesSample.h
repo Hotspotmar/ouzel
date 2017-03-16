@@ -31,11 +31,15 @@ private:
 
     ouzel::EventHandler eventHandler;
 
-    std::unique_ptr<ouzel::gui::Button> hideButton;
-    std::unique_ptr<ouzel::gui::Button> wireframeButton;
+    ouzel::scene::Node hideButtonNode;
+    ouzel::gui::Button hideButton;
+    ouzel::scene::Node wireframeButtonNode;
+    ouzel::gui::Button wireframeButton;
 
     ouzel::scene::Layer guiLayer;
     ouzel::scene::Camera guiCamera;
+    ouzel::scene::Node menuNode;
     ouzel::gui::Menu menu;
+    ouzel::scene::Node backButtonNode;
     ouzel::gui::Button backButton;
 };

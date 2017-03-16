@@ -20,9 +20,9 @@ namespace ouzel
         class TextDrawable: public Component
         {
         public:
-            TextDrawable(const std::string& fontFile,
+            TextDrawable(const std::string& aText,
+                         const std::string& fontFile,
                          bool aMipmaps = true,
-                         const std::string& aText = std::string(),
                          Color aColor = Color::WHITE,
                          const Vector2& aTextAnchor = Vector2(0.5f, 0.5f));
 

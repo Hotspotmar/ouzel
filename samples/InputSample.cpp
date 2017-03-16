@@ -9,6 +9,7 @@ using namespace ouzel;
 
 InputSample::InputSample(Samples& aSamples):
     samples(aSamples),
+    showHideButton("button.png", "button_selected.png", "button_down.png", "", "Show/hide", "arial.fnt", Color::BLACK, Color::BLACK, Color::BLACK),
     backButton("button.png", "button_selected.png", "button_down.png", "", "Back", "arial.fnt", Color::BLACK, Color::BLACK, Color::BLACK)
 {
     eventHandler.keyboardHandler = bind(&InputSample::handleKeyboard, this, placeholders::_1, placeholders::_2);
@@ -35,14 +36,18 @@ InputSample::InputSample(Samples& aSamples):
     guiLayer.addCamera(&guiCamera);
     addLayer(&guiLayer);
 
-    menu.setParent(&guiLayer);
+    menu.setNode(&menuNode);
+    menuNode.setParent(&guiLayer);
 
-    button.reset(new gui::Button("button.png", "button_selected.png", "button_down.png", "", "Show/hide", "arial.fnt", Color::BLACK, Color::BLACK, Color::BLACK));
-    button->setPosition(Vector2(-200.0f, 200.0f));
-    menu.addWidget(button.get());
+    showHideButton.setNode(&showHideButtonNode);
+    showHideButton.setMenu(&menu);
+    showHideButtonNode.setParent(&menuNode);
+    showHideButtonNode.setPosition(Vector2(-200.0f, 200.0f));
 
-    backButton.setPosition(Vector2(-200.0f, -200.0f));
-    menu.addWidget(&backButton);
+    backButton.setNode(&backButtonNode);
+    backButton.setMenu(&menu);
+    backButtonNode.setParent(&menuNode);
+    backButtonNode.setPosition(Vector2(-200.0f, -200.0f));
 }
 
 bool InputSample::handleKeyboard(Event::Type type, const KeyboardEvent& event)
@@ -82,7 +87,7 @@ bool InputSample::handleKeyboard(Event::Type type, const KeyboardEvent& event)
                 sharedEngine->getWindow()->setSize(Size2(640.0f, 480.0f));
                 break;
             case input::KeyboardKey::TAB:
-                button->setEnabled(!button->isEnabled());
+                showHideButton.setEnabled(!showHideButton.isEnabled());
                 break;
             case input::KeyboardKey::ESCAPE:
                 sharedEngine->getInput()->setCursorVisible(true);
@@ -173,12 +178,12 @@ bool InputSample::handleUI(Event::Type type, const UIEvent& event) const
 {
     if (type == Event::Type::UI_CLICK_NODE)
     {
-        if (event.node == &backButton)
+        if (event.component == &backButton)
         {
             sharedEngine->getInput()->setCursorVisible(true);
             samples.setScene(std::unique_ptr<scene::Scene>(new MainMenu(samples)));
         }
-        else if (event.node == button.get())
+        else if (event.component == &showHideButton)
         {
             sharedEngine->getInput()->setCursorVisible(!sharedEngine->getInput()->isCursorVisible());
         }

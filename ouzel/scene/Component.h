@@ -44,6 +44,9 @@ namespace ouzel
             Node* getNode() const { return node; }
 
         protected:
+            virtual void enter();
+            virtual void leave();
+
             Box3 boundingBox;
             bool hidden = false;
 

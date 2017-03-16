@@ -9,7 +9,6 @@ namespace ouzel
     {
         ScrollBar::ScrollBar()
         {
-            pickable = true;
         }
     } // namespace gui
 } // namespace ouzel

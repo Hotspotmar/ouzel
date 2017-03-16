@@ -12,9 +12,9 @@ namespace ouzel
 {
     namespace scene
     {
-        TextDrawable::TextDrawable(const std::string& fontFile,
+        TextDrawable::TextDrawable(const std::string& aText,
+                                   const std::string& fontFile,
                                    bool aMipmaps,
-                                   const std::string& aText,
                                    Color aColor,
                                    const Vector2& aTextAnchor):
             text(aText),

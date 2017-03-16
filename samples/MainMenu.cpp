@@ -33,31 +33,49 @@ MainMenu::MainMenu(Samples& aSamples):
     camera.setScaleMode(scene::Camera::ScaleMode::SHOW_ALL);
     camera.setTargetContentSize(Size2(400.0f, 600.0f));
     layer.addCamera(&camera);
-    menu.setParent(&layer);
 
-    gitHubButton.setPosition(Vector2(0.0f, 120.0f));
-    menu.addWidget(&gitHubButton);
+    menu.setNode(&menuNode);
+    menuNode.setParent(&layer);
 
-    spritesButton.setPosition(Vector2(0.0f, 80.0f));
-    menu.addWidget(&spritesButton);
+    gitHubButton.setMenu(&menu);
+    gitHubButton.setNode(&gitHubButtonNode);
+    gitHubButtonNode.setPosition(Vector2(0.0f, 120.0f));
+    gitHubButtonNode.setParent(&menuNode);
 
-    guiButton.setPosition(Vector2(0.0f, 40.0f));
-    menu.addWidget(&guiButton);
+    spritesButton.setMenu(&menu);
+    spritesButton.setNode(&spritesButtonNode);
+    spritesButtonNode.setPosition(Vector2(0.0f, 80.0f));
+    spritesButtonNode.setParent(&menuNode);
 
-    renderTargetButton.setPosition(Vector2(0.0f, 0.0f));
-    menu.addWidget(&renderTargetButton);
+    guiButton.setMenu(&menu);
+    guiButton.setNode(&guiButtonNode);
+    guiButtonNode.setPosition(Vector2(0.0f, 40.0f));
+    guiButtonNode.setParent(&menuNode);
 
-    animationsButton.setPosition(Vector2(0.0f, -40.0f));
-    menu.addWidget(&animationsButton);
+    renderTargetButton.setMenu(&menu);
+    renderTargetButton.setNode(&renderTargetButtonNode);
+    renderTargetButtonNode.setPosition(Vector2(0.0f, 0.0f));
+    renderTargetButtonNode.setParent(&menuNode);
 
-    inputButton.setPosition(Vector2(0.0f, -80.0f));
-    menu.addWidget(&inputButton);
+    animationsButton.setMenu(&menu);
+    animationsButton.setNode(&animationsButtonNode);
+    animationsButtonNode.setPosition(Vector2(0.0f, -40.0f));
+    animationsButtonNode.setParent(&menuNode);
 
-    soundButton.setPosition(Vector2(0.0f, -120.0f));
-    menu.addWidget(&soundButton);
+    inputButton.setMenu(&menu);
+    inputButton.setNode(&inputButtonNode);
+    inputButtonNode.setPosition(Vector2(0.0f, -80.0f));
+    inputButtonNode.setParent(&menuNode);
 
-    perspectiveButton.setPosition(Vector2(0.0f, -160.0f));
-    menu.addWidget(&perspectiveButton);
+    soundButton.setMenu(&menu);
+    soundButton.setNode(&soundButtonNode);
+    soundButtonNode.setPosition(Vector2(0.0f, -120.0f));
+    soundButtonNode.setParent(&menuNode);
+
+    perspectiveButton.setMenu(&menu);
+    perspectiveButton.setNode(&perspectiveButtonNode);
+    perspectiveButtonNode.setPosition(Vector2(0.0f, -160.0f));
+    perspectiveButtonNode.setParent(&menuNode);
 }
 
 bool MainMenu::handleKeyboard(Event::Type type, const KeyboardEvent& event)
@@ -79,35 +97,35 @@ bool MainMenu::handleUI(Event::Type type, const UIEvent& event)
 {
     if (type == Event::Type::UI_CLICK_NODE)
     {
-        if (event.node == &gitHubButton)
+        if (event.component == &gitHubButton)
         {
             sharedApplication->openURL("https://github.com/elnormous/ouzel");
         }
-        else if (event.node == &spritesButton)
+        else if (event.component == &spritesButton)
         {
             samples.setScene(std::unique_ptr<scene::Scene>(new SpritesSample(samples)));
         }
-        else if (event.node == &guiButton)
+        else if (event.component == &guiButton)
         {
             samples.setScene(std::unique_ptr<scene::Scene>(new GUISample(samples)));
         }
-        else if (event.node == &renderTargetButton)
+        else if (event.component == &renderTargetButton)
         {
             samples.setScene(std::unique_ptr<scene::Scene>(new RTSample(samples)));
         }
-        else if (event.node == &animationsButton)
+        else if (event.component == &animationsButton)
         {
             samples.setScene(std::unique_ptr<scene::Scene>(new AnimationsSample(samples)));
         }
-        else if (event.node == &inputButton)
+        else if (event.component == &inputButton)
         {
             samples.setScene(std::unique_ptr<scene::Scene>(new InputSample(samples)));
         }
-        else if (event.node == &soundButton)
+        else if (event.component == &soundButton)
         {
             samples.setScene(std::unique_ptr<scene::Scene>(new SoundSample(samples)));
         }
-        else if (event.node == &perspectiveButton)
+        else if (event.component == &perspectiveButton)
         {
             samples.setScene(std::unique_ptr<scene::Scene>(new PerspectiveSample(samples)));
         }

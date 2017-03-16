@@ -55,10 +55,13 @@ RTSample::RTSample(Samples& aSamples):
     guiLayer.addCamera(&guiCamera);
     addLayer(&guiLayer);
 
-    menu.setParent(&guiLayer);
+    menu.setNode(&menuNode);
+    menuNode.setParent(&guiLayer);
 
-    backButton.setPosition(Vector2(-200.0f, -200.0f));
-    menu.addWidget(&backButton);
+    backButton.setNode(&backButtonNode);
+    backButton.setMenu(&menu);
+    backButtonNode.setParent(&menuNode);
+    backButtonNode.setPosition(Vector2(-200.0f, -200.0f));
 }
 
 bool RTSample::handleGamepad(Event::Type type, const GamepadEvent& event)
@@ -77,7 +80,7 @@ bool RTSample::handleGamepad(Event::Type type, const GamepadEvent& event)
 
 bool RTSample::handleUI(Event::Type type, const UIEvent& event) const
 {
-    if (type == Event::Type::UI_CLICK_NODE && event.node == &backButton)
+    if (type == Event::Type::UI_CLICK_NODE && event.component == &backButton)
     {
         samples.setScene(std::unique_ptr<scene::Scene>(new MainMenu(samples)));
     }

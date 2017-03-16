@@ -12,6 +12,7 @@ namespace ouzel
     namespace scene
     {
         class Node;
+        class Component;
 
         class NodeContainer: public Noncopyable
         {
@@ -27,11 +28,14 @@ namespace ouzel
             virtual void addChild(Node* node);
             virtual bool removeChild(Node* node);
 
-            void findNodes(const Vector2& position, std::vector<Node*>& nodes) const;
-            void findNodes(const std::vector<Vector2>& edges, std::vector<Node*>& nodes) const;
-
             virtual void enter();
             virtual void leave();
+
+            virtual void findNodes(const Vector2& position, std::vector<Node*>& nodes) const;
+            virtual void findNodes(const std::vector<Vector2>& edges, std::vector<Node*>& nodes) const;
+
+            virtual void findComponents(const Vector2& position, std::vector<Component*>& components) const;
+            virtual void findComponents(const std::vector<Vector2>& edges, std::vector<Component*>& components) const;
 
             std::vector<Node*> children;
             bool entered = false;
