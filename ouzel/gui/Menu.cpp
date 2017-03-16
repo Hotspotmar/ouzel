@@ -64,6 +64,7 @@ namespace ouzel
             if (widget)
             {
                 widgets.push_back(widget);
+                widget->menu = this;
 
                 if (!selectedWidget)
                 {
@@ -78,6 +79,7 @@ namespace ouzel
 
             if (i != widgets.end())
             {
+                widget->menu = nullptr;
                 widgets.erase(i);
             }
 

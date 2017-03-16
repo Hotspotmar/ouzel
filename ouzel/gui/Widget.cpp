@@ -32,6 +32,14 @@ namespace ouzel
             }
         }
 
+        void Widget::removeFromMenu()
+        {
+            if (menu)
+            {
+                menu->removeWidget(this);
+            }
+        }
+
         void Widget::setEnabled(bool newEnabled)
         {
             enabled = newEnabled;

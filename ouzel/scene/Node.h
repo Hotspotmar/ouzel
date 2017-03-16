@@ -127,12 +127,13 @@ namespace ouzel
 
         protected:
             virtual void addChild(Node* node) override;
+
             virtual void enter() override;
             virtual void leave() override;
 
             void addComponent(Component* component);
             bool removeComponent(Component* component);
-            
+
             virtual void calculateLocalTransform() const;
             virtual void calculateTransform() const;
 

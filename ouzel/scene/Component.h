@@ -42,6 +42,7 @@ namespace ouzel
 
             void setNode(Node* newNode);
             Node* getNode() const { return node; }
+            void removeFromNode();
 
         protected:
             virtual void enter();

@@ -19,14 +19,17 @@ namespace ouzel
         class Layer: public NodeContainer
         {
             friend Scene;
+            friend Camera;
         public:
             Layer();
             virtual ~Layer();
 
             virtual void draw();
 
-            void addCamera(Camera* camera);
-            void removeCamera(Camera* camera);
+            void setScene(Scene* newScene);
+            Scene* getScene() const { return scene; }
+            void removeFromScene();
+
             const std::vector<Camera*>& getCameras() const { return cameras; }
 
             Node* pickNode(const Vector2& position) const;
@@ -42,6 +45,8 @@ namespace ouzel
 
         protected:
             virtual void addChild(Node* node) override;
+            void addCamera(Camera* camera);
+            void removeCamera(Camera* camera);
 
             virtual void recalculateProjection();
             virtual void enter() override;

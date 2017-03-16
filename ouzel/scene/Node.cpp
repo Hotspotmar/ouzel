@@ -335,31 +335,24 @@ namespace ouzel
 
         void Node::addComponent(Component* component)
         {
-            if (component->node)
+            if (component)
             {
+                components.push_back(component);
+                component->node = this;
                 if (entered) component->enter();
-                component->node->removeComponent(component);
             }
-
-            component->node = this;
-            components.push_back(component);
         }
 
         bool Node::removeComponent(Component* component)
         {
-            for (auto i = components.begin(); i != components.end();)
+            auto i = std::find(components.begin(), components.end(), component);
+
+            if (i != components.end())
             {
-                if (*i == component)
-                {
-                    if (entered) component->leave();
-                    component->node = nullptr;
-                    components.erase(i);
-                    return true;
-                }
-                else
-                {
-                    ++i;
-                }
+                if (entered) component->leave();
+                component->node = nullptr;
+                components.erase(i);
+                return true;
             }
 
             return false;

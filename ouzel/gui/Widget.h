@@ -19,6 +19,8 @@ namespace ouzel
             virtual ~Widget();
 
             void setMenu(Menu* newMenu);
+            Menu* getMenu() const { return menu; }
+            void removeFromMenu();
 
             virtual void setEnabled(bool newEnabled);
             bool isEnabled() const { return enabled; }

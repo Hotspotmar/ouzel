@@ -28,11 +28,11 @@ MainMenu::MainMenu(Samples& aSamples):
     eventHandler.keyboardHandler = bind(&MainMenu::handleKeyboard, this, placeholders::_1, placeholders::_2);
     sharedEngine->getEventDispatcher()->addEventHandler(&eventHandler);
 
-    addLayer(&layer);
+    layer.setScene(this);
 
     camera.setScaleMode(scene::Camera::ScaleMode::SHOW_ALL);
     camera.setTargetContentSize(Size2(400.0f, 600.0f));
-    layer.addCamera(&camera);
+    camera.setLayer(&layer);
 
     menu.setNode(&menuNode);
     menuNode.setParent(&layer);

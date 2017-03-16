@@ -18,8 +18,8 @@ AnimationsSample::AnimationsSample(Samples& aSamples):
 
     camera.setScaleMode(scene::Camera::ScaleMode::SHOW_ALL);
     camera.setTargetContentSize(Size2(800.0f, 600.0f));
-    layer.addCamera(&camera);
-    addLayer(&layer);
+    camera.setLayer(&layer);
+    layer.setScene(this);
 
     shapeDrawable.rectangle(ouzel::Rectangle(100.0f, 100.0f), Color(0, 128, 128, 255), true);
     shapeDrawable.rectangle(ouzel::Rectangle(100.0f, 100.0f), Color::WHITE, false);
@@ -86,8 +86,8 @@ AnimationsSample::AnimationsSample(Samples& aSamples):
 
     guiCamera.setScaleMode(scene::Camera::ScaleMode::SHOW_ALL);
     guiCamera.setTargetContentSize(Size2(800.0f, 600.0f));
-    guiLayer.addCamera(&guiCamera);
-    addLayer(&guiLayer);
+    guiCamera.setLayer(&guiLayer);
+    guiLayer.setScene(this);
 
     menu.setNode(&menuNode);
     menuNode.setParent(&guiLayer);

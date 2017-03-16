@@ -20,8 +20,8 @@ SpritesSample::SpritesSample(Samples& aSamples):
 
     camera.setScaleMode(scene::Camera::ScaleMode::SHOW_ALL);
     camera.setTargetContentSize(Size2(800.0f, 600.0f));
-    layer.addCamera(&camera);
-    addLayer(&layer);
+    camera.setLayer(&layer);
+    layer.setScene(this);
 
     // character
     characterSprite.initFromFile("run.json");
@@ -52,8 +52,8 @@ SpritesSample::SpritesSample(Samples& aSamples):
 
     guiCamera.setScaleMode(scene::Camera::ScaleMode::SHOW_ALL);
     guiCamera.setTargetContentSize(Size2(800.0f, 600.0f));
-    guiLayer.addCamera(&guiCamera);
-    addLayer(&guiLayer);
+    guiCamera.setLayer(&guiLayer);
+    guiLayer.setScene(this);
 
     menu.setNode(&menuNode);
     menuNode.setParent(&guiLayer);
